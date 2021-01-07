@@ -1,0 +1,39 @@
+--- 
+name: importbuildingblock
+description: "Hello World StyleBook."
+namespace: com.citrix.adc.stylebooks
+schema-version: "1.0"
+version: "1.1"
+type: "building-block"
+
+import-stylebooks: 
+  - 
+    namespace: netscaler.nitro.config  
+    prefix: ns
+    version: "10.5"
+ 
+parameters:
+ 
+ -
+    name: lbname
+    type: string
+    required: true
+ - 
+    name: protocol
+    type: string
+    required: true
+    
+substitutions:
+ protocol-to-port[]:
+    HTTP: 80
+    HTTPS: 443
+    
+components:
+-
+    name: test-lb
+    type: ns::lbvserver
+    properties:
+      name: $parameters.lbname + "-lb"
+      ipv46: 104.104.104.104
+      servicetype: $parameters.protocol
+      port: $substitutions.protocol-to-port($parameters.protocol)
